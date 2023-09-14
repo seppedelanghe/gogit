@@ -76,4 +76,5 @@ See the current active account
 
 - [ ] Option to add new block to ssh config on `gogit add`
 - [ ] Add `gogit remove` command to remove a profile/account
-- [ ] Add support for other git remotes
+- [ ] Add support for other git remotesA
+- [ ] Setting `git config --global` when activating account?
