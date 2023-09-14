@@ -3,4 +3,3 @@ build:
 
 install: build
 	cp bin/gogit /usr/local/bin/
-	gogit init
