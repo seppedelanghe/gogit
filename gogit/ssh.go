@@ -34,7 +34,7 @@ func MoveTempFile() {
 
 }
 
-func SetActiveHost(activehost string, newhost string) {
+func SetActiveHost(remotename string, active string, desired string) {
   f, err := os.Open(getSshConfigPath())
   if err != nil {
     log.Fatal(err)
@@ -52,10 +52,10 @@ func SetActiveHost(activehost string, newhost string) {
 
   for scanner.Scan() {
     text := scanner.Text()
-    if text == fmt.Sprintf("Host %s", newhost) {
-      fnew.WriteString("Host github.com\n")
-    } else if text == "Host github.com" {
-      fnew.WriteString(fmt.Sprintf("Host %s\n", activehost))
+    if text == fmt.Sprintf("Host %s-%s", remotename, desired) {
+      fnew.WriteString(fmt.Sprintf("Host %s\n", remotename))
+    } else if text == fmt.Sprintf("Host %s", remotename) {
+      fnew.WriteString(fmt.Sprintf("Host %s-%s\n", remotename, active))
     } else {
       fnew.WriteString(text + "\n")
     }

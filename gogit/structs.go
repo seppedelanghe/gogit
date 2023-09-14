@@ -24,10 +24,6 @@ type Profile struct {
   Settings ProfileSettings
 }
 
-func (prof *Profile) host() string {
-  return fmt.Sprintf("github.com-%s", prof.Name)
-}
-
 func (prof *Profile) String() string {
   return fmt.Sprintf(
 `name    = %s

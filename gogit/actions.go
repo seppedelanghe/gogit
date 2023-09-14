@@ -75,9 +75,17 @@ func Set(args []string) {
     return
   }
 
+  if config.Active.Settings.RemoteName != profile.Settings.RemoteName {
+    fmt.Printf(
+      "active profile '%s' and profile '%s' have different remotes setup, cannot replace one with another", 
+      config.Active.Name, profile.Name,
+    )
+    return
+  }
+
   // SSH
   fmt.Printf("setting '%s' as active profile\n", name)
-  SetActiveHost(config.Active.host(), profile.host())
+  SetActiveHost(config.Active.Settings.RemoteName, config.Active.Name, profile.Name)
 
   // Git
   if config.SetGit {
