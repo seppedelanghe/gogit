@@ -41,6 +41,11 @@ func Add(args []string) {
   if len(args) >= 3 {
     settings.GitName = args[2]
   }
+
+  // Custom remote
+  if len(args) >= 4 {
+    settings.RemoteName = args[3]
+  }
   
   profile := Profile{
     Name: name,
