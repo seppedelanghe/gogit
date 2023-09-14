@@ -28,6 +28,17 @@ func (prof *Profile) host() string {
   return fmt.Sprintf("github.com-%s", prof.Name)
 }
 
+func (prof *Profile) String() string {
+  return fmt.Sprintf(
+`name    = %s
+active  = %t
+git:
+    name    = %s
+    email   = %s
+    name    = %s`,
+  prof.Name, prof.Active, prof.Settings.RemoteName, prof.Settings.GitEmail, prof.Settings.GitName)
+}
+
 type Config struct {
   Profiles []Profile
   Active Profile

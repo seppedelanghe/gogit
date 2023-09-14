@@ -32,6 +32,16 @@ func Add(args []string) {
   var settings ProfileSettings
   settings.Fill()
   
+  // Custom email
+  if len(args) >= 2 {
+    settings.GitEmail = args[1]
+  }
+
+  // Custom name
+  if len(args) >= 3 {
+    settings.GitName = args[2]
+  }
+  
   profile := Profile{
     Name: name,
     Active: false,
@@ -39,7 +49,10 @@ func Add(args []string) {
   }
 
   config.Profiles = append(config.Profiles, profile)
-  SaveConfig(config) 
+  SaveConfig(config)
+
+  fmt.Println("added new profile:\n ")
+  fmt.Println(profile.String())
 }
 
 func Set(args []string) {
