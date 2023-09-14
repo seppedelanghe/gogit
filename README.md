@@ -1,11 +1,18 @@
 # GoGit
 
 GoGit is a cli tool to quickly switch between github _profiles/accounts_. \
-Currently only works with very specific SSH `config` setup (see below) and `github`.
+Currently only works with very specific SSH `config` setup (see below).
+
+## Disclamer
+
+This tool is under development and can cause corrupt files. __Please use with caution!__ \
+Before overwriting a file (e.g. `~/.ssh/config` or `~/.gitconfig`), GoGit will make a copy of the previous file. \
+This file will have the same name as the original but with `.bak` appended to the end. \
+For example `.gitconfig` => `.gitconfig.bak`, these files can come in handy to restore the old file when a corrupt file is produced.
 
 ## Problem
 
-I found it annoying having 3 GitHub accounts at once and having to use special `Host` values in my SSH config like:
+I found it annoying having 3 GitHub accounts at once and having to use special `Host` values in my SSH config like this:
 ```ssh-config
 # Work account (default)
 Host github.com
@@ -27,12 +34,16 @@ Host github.com-other
     IdentityFile ~/.ssh/id_b
 ```
 
-And then I had to alter the remote url for each repo to have the correct permissions to the remote repo: \
+And then I had to alter the remote url for each local repo to have the correct permissions to the remote repo: \
 `git remote add origin git@github.com-work:username/repo.git`
+
+After not finding a nice solution for this problem, I figured I could build one as a side project.
 
 ## Solution
 
-To fix this issue I am building a cli too that can manage my profiles/accounts for me. When I arive at work I run 1 single command to switch to my work git account and everything is setup as it should. When I get home, I just switch accounts again with 1 command.
+To fix this issue I am building a cli too that can manage my git profiles/accounts for me. \
+When I arrive at work, I run 1 single command to switch to my work git account and everything is setup as it should. \
+When I get home, I just switch accounts again with 1 command.
 
 ## Building
 
@@ -49,7 +60,7 @@ make build
 ```
 
 __Install on MacOS or Linux__ \
-Builds binary, moves it to `/usr/local/bin/` and runs `gogit init`.
+Builds binary and moves it to `/usr/local/bin/`
 ```bash
 make install
 sudo make install # if you require root access for /usr/local/bin/
@@ -72,17 +83,15 @@ Add a new git account to the GoGit config with the following arguments:
     - (optional) custom remote name
     - default = `github.com`
 
-<br>
-
-GoGit will only change the `Host` values in your SSH config. \
-For example: `github.com-<name>` to `github.com` and back. \
-All other settings will be left unchanged.
-
 <hr>
 
 ### `gogit set <name>`
 
-Set the current active account
+Set the current active account. 
+
+GoGit will only change the `Host` values in your SSH config. \
+For example: `github.com-<name>` to `github.com` and back. \
+All other settings will be left unchanged.
 
 <hr>
 
@@ -101,11 +110,12 @@ See the current active account
 
 ## SSH config
 
-GoGit currently requires you to have your SSH config file setup up in a specific way. The needs to be done manually for now. \
+GoGit currently requires you to have your SSH config file setup up in a specific way. This needs to be done manually for now. \
 See the [problem](#problem) section for an example structure of a working `~/.ssh/config` file.
 
-## The config file `~/gogit.ini`
+## GoGit config file
 
+__Located at__: `~/gogit.ini`
 
 ```ini
 [profiles]
@@ -127,12 +137,12 @@ username = User b
 email    = user.b@email.com
 ```
 
-- The `set-git-user` alters your `~/.gitconfig` file
+- Setting `set-git-user` to `true` will make GoGit alter your `~/.gitconfig` file
 - Each profile has unique settings
 
 ## Features to add
 
-- [ ] Option to add new block to ssh config on `gogit add`
+- [ ] Option to atuo add new block to ssh config on `gogit add`
 - [ ] Add `gogit remove` command to remove a profile/account
 - [x] Add support for other git remotes
 - [x] Setting `git config --global` when activating account
