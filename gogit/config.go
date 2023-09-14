@@ -30,14 +30,26 @@ func loadConfigFile() (*ini.File) {
 func LoadConfig() (config Config) {
   cfg := loadConfigFile()
 
+  // Preferences
+  config.SetGit = cfg.Section("preferences").Key("set-git-user").MustBool(false)
+
+  // Profiles
   for _, name := range cfg.Section("profiles").KeyStrings() {
     val, err := cfg.Section("profiles").Key(name).Bool()
     if err != nil {
       val = false
     }
+
+    cfgProfSection := cfg.Section(fmt.Sprintf("profile.%s", name))
+
     account := Profile{
       Name: name,
       Active: val,
+      Settings: ProfileSettings{
+        RemoteName: cfgProfSection.Key("remote").String(),
+        GitName: cfgProfSection.Key("username").String(),
+        GitEmail: cfgProfSection.Key("email").String(),
+      },
     }
     config.Profiles = append(config.Profiles, account)
     if val {
@@ -51,6 +63,10 @@ func LoadConfig() (config Config) {
 func SaveConfig(config Config) {
   cfg := loadConfigFile()
 
+  // Preferences
+  cfg.Section("preferences").Key("set-git-user").SetValue(strconv.FormatBool(config.SetGit))
+
+  // Profiles
   for _, profile := range config.Profiles {
     str_bool := strconv.FormatBool(profile.Active)
     cfg.Section("profiles").Key(profile.Name).SetValue(str_bool)
@@ -88,8 +104,9 @@ func FindProfile(config *Config, name string) (profile *Profile) {
 
 func CreateEmptyConfig() {
   cfg := ini.Empty()
+  
   cfg.Section("profiles").SetBody("")
-  cfg.SaveTo(getConfigPath())
+  cfg.Section("preferences").Key("set-git-user").SetValue("false")
 
-  fmt.Println("gogit initialized!")
+  cfg.SaveTo(getConfigPath())
 }

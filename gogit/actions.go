@@ -74,10 +74,17 @@ func Set(args []string) {
     fmt.Printf("profile with name '%s' is already active\n", name)
     return
   }
-  
+
+  // SSH
   fmt.Printf("setting '%s' as active profile\n", name)
   SetActiveHost(config.Active.host(), profile.host())
+
+  // Git
+  if config.SetGit {
+    SetGitUser(&profile.Settings)
+  }
   
+  // Config
   SetActiveProfile(&config, profile.Name)
   SaveConfig(config)
 }
@@ -88,4 +95,5 @@ func Drop(args []string) {
 
 func Init(args []string) {
   CreateEmptyConfig()
+  fmt.Println("gogit initialized!")
 }

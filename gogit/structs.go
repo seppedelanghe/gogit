@@ -42,4 +42,5 @@ git:
 type Config struct {
   Profiles []Profile
   Active Profile
+  SetGit bool
 }
