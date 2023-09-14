@@ -5,7 +5,7 @@ Currently only works with very specific SSH `config` setup (see below) and `gith
 
 ## Problem
 
-I found it annoying having 3 GitHub account at once and having to use special `Host` values in my SSH config like:
+I found it annoying having 3 GitHub accounts at once and having to use special `Host` values in my SSH config like:
 ```
 Host github.com-work
     Hostname github.com
@@ -26,7 +26,7 @@ Host github.com-other
     IdentityFile ~/.ssh/id_b
 ```
 
-And then I had to alter remote url like this to have the correct permission to the repo: \
+And then I had to alter the remote url for each repo to have the correct permissions to the remote repo: \
 `git remote add origin git@github.com-work:username/repo.git`
 
 ## Solution
@@ -56,11 +56,22 @@ sudo make install # if you require root access for /usr/local/bin/
 
 ## Commands
 
-### `gogit add`
+### `gogit add <name>`
 
 Add a new git account to the GoGit config
 
-### `gogit set`
+Requires you to have a block in your ssh config file like this:
+```
+Host github.com-<name>
+    Hostname github.com
+    Port 22
+    User git
+    IdentityFile ~/.ssh/id_rsa
+```
+
+GoGit will only change `github.com-<name>` to `github.com` and back. All other settings will be left unchanged.
+
+### `gogit set <name>`
 
 Set the current active account
 
