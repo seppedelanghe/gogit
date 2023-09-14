@@ -1,9 +1,9 @@
 package gogit
 
-
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/go-ini/ini"
@@ -23,8 +23,12 @@ type Config struct {
   Active Profile
 }
 
+func getConfigPath() string {
+  return filepath.Join(os.Getenv("HOME"), "gogit.ini")
+}
+
 func loadConfigFile() (*ini.File) {
-  cfg, err := ini.Load("gogit.ini")
+  cfg, err := ini.Load(getConfigPath())
   if err != nil {
     fmt.Printf("Failed to read gogit config file: %v", err)
     os.Exit(1)
@@ -62,7 +66,7 @@ func SaveConfig(config Config) {
     cfg.Section("profiles").Key(profile.Name).SetValue(str_bool)
   }
 
-  cfg.SaveTo("gogit.ini")
+  cfg.SaveTo(getConfigPath())
 }
 
 
@@ -90,7 +94,7 @@ func FindProfile(config *Config, name string) (profile *Profile) {
 func CreateEmptyConfig() {
   cfg := ini.Empty()
   cfg.Section("profiles").SetBody("")
-  cfg.SaveTo("gogit.ini")
+  cfg.SaveTo(getConfigPath())
 
   fmt.Println("gogit initialized!")
 }
