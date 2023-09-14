@@ -9,21 +9,11 @@ import (
 	"github.com/go-ini/ini"
 )
 
-type Profile struct {
-  Name string
-  Active bool
-}
-
-func (prof *Profile) host() string {
-  return fmt.Sprintf("github.com-%s", prof.Name)
-}
-
-type Config struct {
-  Profiles []Profile
-  Active Profile
-}
 
 func getConfigPath() string {
+  if os.Getenv("GOGIT_ENV") == "develop" {
+    return "./gogit.ini"
+  }
   return filepath.Join(os.Getenv("HOME"), "gogit.ini")
 }
 
@@ -64,6 +54,11 @@ func SaveConfig(config Config) {
   for _, profile := range config.Profiles {
     str_bool := strconv.FormatBool(profile.Active)
     cfg.Section("profiles").Key(profile.Name).SetValue(str_bool)
+    
+    sectionKey := fmt.Sprintf("profile.%s", profile.Name)
+    cfg.Section(sectionKey).Key("remote").SetValue(profile.Settings.RemoteName)
+    cfg.Section(sectionKey).Key("username").SetValue(profile.Settings.GitName)
+    cfg.Section(sectionKey).Key("email").SetValue(profile.Settings.GitEmail)
   }
 
   cfg.SaveTo(getConfigPath())

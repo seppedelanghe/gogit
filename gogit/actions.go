@@ -29,9 +29,13 @@ func Add(args []string) {
     }
   }
 
+  var settings ProfileSettings
+  settings.Fill()
+  
   profile := Profile{
     Name: name,
     Active: false,
+    Settings: settings,
   }
 
   config.Profiles = append(config.Profiles, profile)
