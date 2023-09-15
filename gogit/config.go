@@ -60,8 +60,8 @@ func LoadConfig() (config Config) {
   return
 }
 
-func SaveConfig(config Config) {
-  cfg := loadConfigFile()
+func SaveConfig(config *Config) {
+  cfg := ini.Empty()
 
   // Preferences
   cfg.Section("preferences").Key("set-git-user").SetValue(strconv.FormatBool(config.SetGit))
@@ -102,6 +102,19 @@ func FindProfile(config *Config, name string) (profile *Profile) {
   return nil
 }
 
+func DeleteProfile(config *Config, profile *Profile) {
+  var idx int
+  for i, prof := range config.Profiles {
+    if profile.Name == prof.Name {
+      idx = i
+      break
+    }
+  }
+  
+  config.Profiles = append(config.Profiles[:idx], config.Profiles[idx+1:]...)
+  SaveConfig(config)
+}
+
 func CreateEmptyConfig() {
   cfg := ini.Empty()
   
@@ -110,3 +123,4 @@ func CreateEmptyConfig() {
 
   cfg.SaveTo(getConfigPath())
 }
+

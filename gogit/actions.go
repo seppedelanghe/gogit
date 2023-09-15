@@ -54,7 +54,7 @@ func Add(args []string) {
   }
 
   config.Profiles = append(config.Profiles, profile)
-  SaveConfig(config)
+  SaveConfig(&config)
 
   fmt.Println("added new profile:\n ")
   fmt.Println(profile.String())
@@ -99,11 +99,33 @@ func Set(args []string) {
   
   // Config
   SetActiveProfile(&config, profile.Name)
-  SaveConfig(config)
+  SaveConfig(&config)
 }
 
-func Drop(args []string) {
-  fmt.Println("drop not implemented yet")
+func Remove(args []string) {
+  if len(args) == 0 {
+    fmt.Println("missing name for profile")
+    return
+  }
+
+  config := LoadConfig()
+  name := args[0]
+  profile := FindProfile(&config, name)
+  if profile == nil {
+    fmt.Printf("profile with name '%s' not found\n", name)
+    return
+  }
+
+  if config.Active.Name == profile.Name {
+    fmt.Printf("profile '%s' is currently active, cannot remove\n", name)
+    return
+  }
+  
+  // Config
+  DeleteProfile(&config, profile)
+
+  fmt.Printf("profile '%s' removed\n", name)
+  
 }
 
 func Init(args []string) {
