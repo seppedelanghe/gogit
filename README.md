@@ -160,6 +160,6 @@ email    = user.b@email.com
 ## Features to add
 
 - [ ] Option to atuo add new block to ssh config on `gogit add`
-- [ ] Add `gogit remove` command to remove a profile/account
+- [x] Add `gogit remove` command to remove a profile/account
 - [x] Add support for other git remotes
 - [x] Setting `git config --global` when activating account
