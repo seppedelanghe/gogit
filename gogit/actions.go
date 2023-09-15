@@ -7,10 +7,28 @@ import (
 func Active(args []string) {
   config := LoadConfig()
   if len(config.Profiles) > 0 {
-    fmt.Printf("The current active git profile is: %s\n", config.Active.Name)
+    fmt.Printf("the current active git profile is: %s\n", config.Active.Name)
   } else {
-    fmt.Println("You do not have an profiles setup yet. Run 'gogit add' to add a profile")
+    fmt.Println("you do not have an profiles setup yet. Run 'gogit add' to add a profile")
   }
+}
+
+func List(args []string) {
+  config := LoadConfig()
+  if len(config.Profiles) == 0 {
+    fmt.Println("you do not have an profiles setup yet. Run 'gogit add' to add a profile")
+    return
+  }
+
+  var content string = "profiles:\n"
+  for _, prof := range config.Profiles {
+    if prof.Active {
+      content = content + fmt.Sprintf("-> %s\n", prof.Name)
+    } else {
+      content = content + fmt.Sprintf("-  %s\n", prof.Name)
+    }
+  }
+  fmt.Printf(content)
 }
 
 func Add(args []string) {
