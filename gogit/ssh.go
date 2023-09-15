@@ -3,7 +3,6 @@ package gogit
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -37,12 +36,14 @@ func MoveTempFile() {
 func SetActiveHost(remotename string, active string, desired string) {
   f, err := os.Open(getSshConfigPath())
   if err != nil {
-    log.Fatal(err)
+    fmt.Printf("%v", err)
+    return
   }
 
   fnew, err := os.Create("config.tmp")
   if err != nil {
-    log.Fatal(err)
+    fmt.Printf("%v", err)
+    return
   }
 
   defer f.Close()
@@ -62,7 +63,8 @@ func SetActiveHost(remotename string, active string, desired string) {
   }
 
   if err := scanner.Err(); err != nil {
-    log.Fatal(err)
+    fmt.Printf("%v", err)
+    return
   }
 
   MoveTempFile()

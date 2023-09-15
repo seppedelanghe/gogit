@@ -7,16 +7,16 @@ import (
 func Active(args []string) {
   config := LoadConfig()
   if len(config.Profiles) > 0 {
-    fmt.Printf("the current active git profile is: %s\n", config.Active.Name)
+    fmt.Printf("Active git profile: %s\n", config.Active.Name)
   } else {
-    fmt.Println("you do not have an profiles setup yet. Run 'gogit add' to add a profile")
+    fmt.Println("You do not have an profiles setup yet. Run 'gogit add' to add a profile")
   }
 }
 
 func List(args []string) {
   config := LoadConfig()
   if len(config.Profiles) == 0 {
-    fmt.Println("you do not have an profiles setup yet. Run 'gogit add' to add a profile")
+    fmt.Println("You do not have an profiles setup yet. Run 'gogit add' to add a profile")
     return
   }
 
@@ -33,7 +33,7 @@ func List(args []string) {
 
 func Add(args []string) {
   if len(args) == 0 {
-    fmt.Println("missing name for profile")
+    fmt.Println("Missing argument 'name' for profile")
     return
   }
 
@@ -42,7 +42,7 @@ func Add(args []string) {
 
   for _, profile := range config.Profiles {
     if name == profile.Name {
-      fmt.Printf("profile with name '%s' already exists\n", name)
+      fmt.Printf("Profile with name '%s' already exists\n", name)
       return
     }
   }
@@ -74,13 +74,13 @@ func Add(args []string) {
   config.Profiles = append(config.Profiles, profile)
   SaveConfig(&config)
 
-  fmt.Println("added new profile:\n ")
+  fmt.Print("Added new profile:\n\n")
   fmt.Println(profile.String())
 }
 
 func Set(args []string) {
   if len(args) == 0 {
-    fmt.Println("missing name for profile")
+    fmt.Println("Missing argument 'name' for profile")
     return
   }
 
@@ -89,25 +89,25 @@ func Set(args []string) {
 
   profile := FindProfile(&config, name)
   if profile == nil {
-    fmt.Printf("profile with name '%s' not found\n", name)
+    fmt.Printf("Profile with name '%s' not found\n", name)
     return
   }
 
   if config.Active.Name == name {
-    fmt.Printf("profile with name '%s' is already active\n", name)
+    fmt.Printf("Profile with name '%s' is already active\n", name)
     return
   }
 
   if config.Active.Settings.RemoteName != profile.Settings.RemoteName {
     fmt.Printf(
-      "active profile '%s' and profile '%s' have different remotes setup, cannot replace one with another", 
+      "Active profile '%s' and profile '%s' have different remotes setup, cannot replace one with another", 
       config.Active.Name, profile.Name,
     )
     return
   }
 
   // SSH
-  fmt.Printf("setting '%s' as active profile\n", name)
+  fmt.Printf("Setting '%s' as active profile\n", name)
   SetActiveHost(config.Active.Settings.RemoteName, config.Active.Name, profile.Name)
 
   // Git
@@ -122,7 +122,7 @@ func Set(args []string) {
 
 func Remove(args []string) {
   if len(args) == 0 {
-    fmt.Println("missing name for profile")
+    fmt.Println("Missing argument 'name' for profile")
     return
   }
 
@@ -135,18 +135,18 @@ func Remove(args []string) {
   }
 
   if config.Active.Name == profile.Name {
-    fmt.Printf("profile '%s' is currently active, cannot remove\n", name)
+    fmt.Printf("Profile '%s' is currently active, cannot remove\n", name)
     return
   }
   
   // Config
   DeleteProfile(&config, profile)
 
-  fmt.Printf("profile '%s' removed\n", name)
+  fmt.Printf("Profile '%s' removed\n", name)
   
 }
 
 func Init(args []string) {
   CreateEmptyConfig()
-  fmt.Println("gogit initialized!")
+  fmt.Println("GoGit initialized!")
 }
