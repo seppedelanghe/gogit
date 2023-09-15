@@ -106,6 +106,23 @@ Create a blank GoGit config file
 See the current active account
 
 <hr>
+
+### `gogit remove <name>`
+
+Remove a profile/account from GoGit, leaves your SSH config untouched.
+
+<hr>
+
+### `gogit list`
+
+Get a list of the current configured profiles/accounts with the arrow `->` indication the active one.
+```bash
+profiles:
+-> home
+-  work
+-  other
+```
+
 <br>
 
 ## SSH config
@@ -143,6 +160,6 @@ email    = user.b@email.com
 ## Features to add
 
 - [ ] Option to atuo add new block to ssh config on `gogit add`
-- [ ] Add `gogit remove` command to remove a profile/account
+- [x] Add `gogit remove` command to remove a profile/account
 - [x] Add support for other git remotes
 - [x] Setting `git config --global` when activating account

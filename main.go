@@ -13,8 +13,9 @@ func main() {
     "active": gogit.Active,
     "add": gogit.Add,
     "set": gogit.Set,
-    "drop": gogit.Drop,
+    "remove": gogit.Remove,
     "init": gogit.Init,
+    "list": gogit.List,
   }
 
   if len(os.Args) == 1 {

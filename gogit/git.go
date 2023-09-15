@@ -3,7 +3,6 @@ package gogit
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -40,7 +39,8 @@ func loadGitConfigFile() *ini.File {
 func GetGitUser() (name string, email string) {
   f, err := os.Open(getGitConfigPath())
   if err != nil {
-    log.Fatal(err)
+    fmt.Printf("%v", err)
+    return
   }
 
   defer f.Close()
@@ -60,7 +60,8 @@ func GetGitUser() (name string, email string) {
   }
 
   if err := scanner.Err(); err != nil {
-    log.Fatal(err)
+    fmt.Printf("%v", err)
+    return
   }
 
   return
@@ -69,12 +70,14 @@ func GetGitUser() (name string, email string) {
 func SetGitUser(settings *ProfileSettings) {
   f, err := os.Open(getGitConfigPath())
   if err != nil {
-    log.Fatal(err)
+    fmt.Printf("%v", err)
+    return
   }
 
   fw, err := os.Create("gitconfig.tmp")
   if err != nil {
-    log.Fatal(err)
+    fmt.Printf("%v", err)
+    return
   }
 
   defer f.Close()
@@ -101,7 +104,8 @@ func SetGitUser(settings *ProfileSettings) {
   }
 
   if err := scanner.Err(); err != nil {
-    log.Fatal(err)
+    fmt.Printf("%v", err)
+    return
   }
 
   replaceGitconfigWithTemp()
