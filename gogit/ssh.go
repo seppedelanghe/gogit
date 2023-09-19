@@ -10,6 +10,9 @@ import (
   
 
 func getSshConfigPath() (string) {
+  if os.Getenv("GOGIT_ENV") == "develop" {
+    return "./config"
+  }
   return filepath.Join(os.Getenv("HOME"), ".ssh", "config")
 }
 
@@ -33,7 +36,42 @@ func MoveTempFile() {
 
 }
 
-func SetActiveHost(remotename string, active string, desired string) {
+func SetActiveHost(remotename string, desired string) {
+  f, err := os.Open(getSshConfigPath())
+  if err != nil {
+    fmt.Printf("%v", err)
+    return
+  }
+
+  fnew, err := os.Create("config.tmp")
+  if err != nil {
+    fmt.Printf("%v", err)
+    return
+  }
+
+  defer f.Close()
+  defer fnew.Close()
+
+  scanner := bufio.NewScanner(f)
+
+  for scanner.Scan() {
+    text := scanner.Text()
+    if text == fmt.Sprintf("Host %s-%s", remotename, desired) {
+      fnew.WriteString(fmt.Sprintf("Host %s\n", remotename))
+    } else {
+      fnew.WriteString(text + "\n")
+    }
+  }
+
+  if err := scanner.Err(); err != nil {
+    fmt.Printf("%v", err)
+    return
+  }
+
+  MoveTempFile()
+}
+
+func ReplaceActiveHost(remotename string, active string, desired string) {
   f, err := os.Open(getSshConfigPath())
   if err != nil {
     fmt.Printf("%v", err)

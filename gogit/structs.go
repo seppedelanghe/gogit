@@ -40,3 +40,7 @@ type Config struct {
   Active Profile
   SetGit bool
 }
+
+func (conf *Config) HasActiveProfile() bool {
+  return conf.Active.Name != "" && conf.Active.Settings.GitEmail != ""
+}

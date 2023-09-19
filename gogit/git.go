@@ -11,6 +11,9 @@ import (
 )
 
 func getGitConfigPath() string {
+  if os.Getenv("GOGIT_ENV") == "develop" {
+    return "./.gitconfig"
+  }
   return filepath.Join(os.Getenv("HOME"), ".gitconfig")
 }
 

@@ -4,6 +4,26 @@ import (
 	"fmt"
 )
 
+
+func activateProfile(config *Config, profile *Profile) {
+  // SSH
+  fmt.Printf("Setting '%s' as active profile\n", profile.Name)
+  if len(config.Profiles) > 1 && config.HasActiveProfile() {
+    ReplaceActiveHost(config.Active.Settings.RemoteName, config.Active.Name, profile.Name)
+  } else {
+    SetActiveHost(config.Active.Settings.RemoteName, profile.Name)
+  }
+
+  // Git
+  if config.SetGit {
+    SetGitUser(&profile.Settings)
+  }
+  
+  // Config
+  SetActiveProfile(config, profile.Name)
+  SaveConfig(config)
+}
+
 func Active(args []string) {
   config := LoadConfig()
   if len(config.Profiles) > 0 {
@@ -76,6 +96,10 @@ func Add(args []string) {
 
   fmt.Print("Added new profile:\n\n")
   fmt.Println(profile.String())
+
+  if len(config.Profiles) == 1 {
+    activateProfile(&config, &profile)
+  }
 }
 
 func Set(args []string) {
@@ -106,18 +130,7 @@ func Set(args []string) {
     return
   }
 
-  // SSH
-  fmt.Printf("Setting '%s' as active profile\n", name)
-  SetActiveHost(config.Active.Settings.RemoteName, config.Active.Name, profile.Name)
-
-  // Git
-  if config.SetGit {
-    SetGitUser(&profile.Settings)
-  }
-  
-  // Config
-  SetActiveProfile(&config, profile.Name)
-  SaveConfig(&config)
+  activateProfile(&config, profile)
 }
 
 func Remove(args []string) {
